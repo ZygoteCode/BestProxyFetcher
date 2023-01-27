@@ -9,9 +9,10 @@ using System.Diagnostics;
 
 class Program
 {
-    public static ResourceSemaphore httpSemaphore, socks4Semaphore, socks5Semaphore;
-    public static string httpProxies, socks4Proxies, socks5Proxies;
-    public static Stopwatch httpStopwatch, socks4Stopwatch, socks5Stopwatch;
+    public static ResourceSemaphore httpSemaphore, httpsSemaphore, socks4Semaphore, socks5Semaphore;
+    public static string httpProxies, httpsProxies, socks4Proxies, socks5Proxies;
+    public static Stopwatch httpStopwatch, httpsStopwatch, socks4Stopwatch, socks5Stopwatch;
+    public static int http, https, socks4, socks5, finished;
 
     public static List<Tuple<string, string>> httpRequests = new List<Tuple<string, string>>()
     {
@@ -23,6 +24,24 @@ class Program
         new Tuple<string, string>("https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt", "raw.githubusercontent.com"),
         new Tuple<string, string>("https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt", "raw.githubusercontent.com"),
         new Tuple<string, string>("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/master/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/officialputuid/KangProxy/master/http/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/HyperBeats/proxy-list/master/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/master/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies_anonymous/http.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt", "raw.githubusercontent.com"),
+    };
+
+    public static List<Tuple<string, string>> httpsRequests = new List<Tuple<string, string>>()
+    {
+        new Tuple<string, string>("https://raw.githubusercontent.com/officialputuid/KangProxy/master/https/https.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/roosterkid/openproxylist/master/HTTPS_RAW.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/master/https.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt", "raw.githubusercontent.com"),
     };
 
     public static List<Tuple<string, string>> socks4Requests = new List<Tuple<string, string>>()
@@ -34,6 +53,16 @@ class Program
         new Tuple<string, string>("https://api.openproxylist.xyz/socks4.txt", "api.openproxylist.xyz"),
         new Tuple<string, string>("https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks4.txt", "raw.githubusercontent.com"),
         new Tuple<string, string>("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/roosterkid/openproxylist/master/SOCKS4_RAW.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/master/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/officialputuid/KangProxy/master/socks4/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/HyperBeats/proxy-list/master/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/master/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies_anonymous/socks4.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks4.txt", "raw.githubusercontent.com"),
     };
 
     public static List<Tuple<string, string>> socks5Requests = new List<Tuple<string, string>>()
@@ -45,9 +74,18 @@ class Program
         new Tuple<string, string>("https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt", "raw.githubusercontent.com"),
         new Tuple<string, string>("https://api.openproxylist.xyz/socks5.txt", "api.openproxylist.xyz"),
         new Tuple<string, string>("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/roosterkid/openproxylist/master/SOCKS5_RAW.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/master/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/officialputuid/KangProxy/master/socks5/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/HyperBeats/proxy-list/master/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/master/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies_anonymous/socks5.txt", "raw.githubusercontent.com"),
+        new Tuple<string, string>("https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks5.txt", "raw.githubusercontent.com"),
     };
-
-    public static int http, socks4, socks5, finished;
 
     static void Main()
     {
@@ -55,14 +93,17 @@ class Program
         Console.WriteLine("[!] Fetching proxies, please wait a while.");
 
         httpSemaphore = new ResourceSemaphore();
+        httpsSemaphore = new ResourceSemaphore();
         socks4Semaphore = new ResourceSemaphore();
         socks5Semaphore = new ResourceSemaphore();
 
         httpStopwatch = new Stopwatch();
+        httpsStopwatch = new Stopwatch();
         socks4Stopwatch = new Stopwatch();
         socks5Stopwatch = new Stopwatch();
 
         httpStopwatch.Start();
+        httpsStopwatch.Start();
         socks4Stopwatch.Start();
         socks5Stopwatch.Start();
 
@@ -71,12 +112,18 @@ class Program
         System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
         new Thread(() => CheckHTTP()).Start();
+        new Thread(() => CheckHTTPS()).Start();
         new Thread(() => CheckSOCKS4()).Start();
         new Thread(() => CheckSOCKS5()).Start();
 
         foreach (Tuple<string, string> tuple in httpRequests)
         {
             new Thread(() => FetchHTTP(tuple.Item1, tuple.Item2)).Start();
+        }
+
+        foreach (Tuple<string, string> tuple in httpsRequests)
+        {
+            new Thread(() => FetchHTTPS(tuple.Item1, tuple.Item2)).Start();
         }
 
         foreach (Tuple<string, string> tuple in socks4Requests)
@@ -89,7 +136,7 @@ class Program
             new Thread(() => FetchSOCKS5(tuple.Item1, tuple.Item2)).Start();
         }
 
-        while (finished != 3)
+        while (finished != 4)
         {
             Thread.Sleep(100);
         }
@@ -107,6 +154,17 @@ class Program
 
         Thread.Sleep(100);
         WriteProxies("http.txt", httpProxies, "HTTP");
+    }
+
+    public static void CheckHTTPS()
+    {
+        while (https != httpsRequests.Count)
+        {
+            Thread.Sleep(100);
+        }
+
+        Thread.Sleep(100);
+        WriteProxies("https.txt", httpsProxies, "HTTPS");
     }
 
     public static void CheckSOCKS4()
@@ -166,6 +224,11 @@ class Program
             {
                 httpStopwatch.Stop();
                 tookTime = httpStopwatch.ElapsedMilliseconds.ToString();
+            }
+            else if (proxyType.Equals("HTTPS"))
+            {
+                httpsStopwatch.Stop();
+                tookTime = httpsStopwatch.ElapsedMilliseconds.ToString();
             }
             else if (proxyType.Equals("SOCKS4"))
             {
@@ -234,6 +297,36 @@ class Program
         }
 
         http++;
+    }
+
+    public static void FetchHTTPS(string url, string host)
+    {
+        goHere: while (httpsSemaphore.IsResourceNotAvailable())
+        {
+            Thread.Sleep(100);
+        }
+
+        if (httpsSemaphore.IsResourceAvailable())
+        {
+            httpsSemaphore.LockResource();
+
+            if (httpsProxies == "")
+            {
+                httpsProxies = FetchResource(url, host);
+            }
+            else
+            {
+                httpsProxies += Environment.NewLine + FetchResource(url, host);
+            }
+
+            httpsSemaphore.UnlockResource();
+        }
+        else
+        {
+            goto goHere;
+        }
+
+        https++;
     }
 
     public static void FetchSOCKS4(string url, string host)
@@ -305,6 +398,7 @@ class Program
             request.Proxy = null;
             request.UseDefaultCredentials = false;
             request.AllowAutoRedirect = false;
+            request.Timeout = 70000;
 
             var field = typeof(HttpWebRequest).GetField("_HttpRequestHeaders", BindingFlags.Instance | BindingFlags.NonPublic);
 
